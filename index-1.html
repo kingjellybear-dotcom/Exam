@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>시험 자료 정리</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--bg:#f2f4f6;--card:#fff;--text:#191f28;--sub:#6b7684;--line:#e5e8eb;--blue:#3182f6;--blue-bg:#e8f3ff;--mark:#fff1a8}
+@media(prefers-color-scheme:dark){:root{--bg:#101215;--card:#1b1e23;--text:#f2f4f6;--sub:#9aa3af;--line:#2b2f36;--blue:#4593fc;--blue-bg:#16253a;--mark:#6b5b12}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.6}
+main{max-width:640px;margin:0 auto;padding:32px 16px 64px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:20px}
+h1{font-size:26px;margin:0;letter-spacing:-.02em}
+.dday{background:var(--blue);color:#fff;font-weight:700;border-radius:14px;padding:8px 14px;font-size:15px;white-space:nowrap}
+.search{width:100%;border:0;border-radius:14px;background:var(--card);color:var(--text);padding:14px 16px;font:inherit;font-size:16px;outline:2px solid transparent}
+.search:focus{outline-color:var(--blue)}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:14px 0 6px}
+.tab{flex:none;border:0;border-radius:999px;background:var(--card);color:var(--sub);padding:8px 14px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.tab[aria-pressed=true]{background:var(--blue);color:#fff}
+.tab:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+details{background:var(--card);border-radius:18px;margin-top:12px;overflow:hidden}
+summary{list-style:none;cursor:pointer;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--sub);border-bottom:2px solid var(--sub);transform:rotate(45deg);transition:transform .2s;flex:none;margin:-4px 4px 0 0}
+details[open] summary::after{transform:rotate(-135deg);margin-top:4px}
+.name{font-size:18px;font-weight:700}
+.book{font-size:13px;color:var(--sub);margin-top:2px}
+.body{padding:0 20px 20px}
+.unit{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+.unit h3{font-size:15px;margin:0 0 6px;color:var(--blue)}
+.unit ul{margin:0;padding-left:20px}
+.unit li{margin:4px 0;font-size:15px}
+.empty{color:var(--sub);font-size:14px;padding:4px 0}
+mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 1px}
+.none{text-align:center;color:var(--sub);padding:48px 0}
+@media(prefers-reduced-motion:reduce){summary::after{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1 id="title">시험 자료 정리</h1>
+    <div class="dday" id="dday"></div>
+  </header>
+  <input class="search" id="q" type="search" placeholder="키워드로 검색" aria-label="키워드로 검색">
+  <div class="tabs" id="tabs"></div>
+  <div id="list"></div>
+</main>
+
+<script>
+/* ===== 여기만 고치면 돼 =====
+   date: 시험 첫날 (예: "2026-12-15"). 비워두면 D-day가 "날짜 미정"으로 표시돼.
+   units: 단원별로 { title: "단원 이름", items: ["내용1", "내용2"] } 를 추가해. */
+const EXAM = { name: "시험 자료 정리", date: "" };
+
+const SUBJECTS = [
+  { id: "kor",  name: "국어", book: "비상 · 박현숙", units: [] },
+  { id: "math", name: "수학", book: "동아출판 · 강병학", units: [] },
+  { id: "sci",  name: "과학", book: "미래엔", units: [] },
+  { id: "hist", name: "역사", book: "비상 · 이병인", units: [] },
+  { id: "eng",  name: "영어", book: "천재 · 소영순", units: [] }
+];
+/* ============================ */
+
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+let filter = "all", query = "";
+
+function renderDday() {
+  const el = $("#dday");
+  if (!EXAM.date) { el.textContent = "날짜 미정"; return; }
+  const t = new Date(EXAM.date + "T00:00:00"), n = new Date();
+  n.setHours(0, 0, 0, 0);
+  const d = Math.round((t - n) / 864e5);
+  el.textContent = d > 0 ? "D-" + d : d === 0 ? "D-Day" : "시험 끝";
+}
+
+function renderTabs() {
+  const tabs = [{ id: "all", name: "전체" }, ...SUBJECTS];
+  $("#tabs").innerHTML = tabs.map(t =>
+    `<button class="tab" data-id="${t.id}" aria-pressed="${t.id === filter}">${esc(t.name)}</button>`).join("");
+}
+
+function hl(text) {
+  const safe = esc(text);
+  if (!query) return safe;
+  return safe.replace(new RegExp("(" + reEsc(esc(query)) + ")", "gi"), "<mark>$1</mark>");
+}
+
+function render() {
+  const q = query.toLowerCase();
+  const html = SUBJECTS.filter(s => filter === "all" || s.id === filter).map(s => {
+    let units = s.units;
+    if (q) {
+      units = units.map(u => ({
+        title: u.title,
+        items: (u.title.toLowerCase().includes(q) ? u.items : u.items.filter(i => i.toLowerCase().includes(q)))
+      })).filter(u => u.items.length || u.title.toLowerCase().includes(q));
+      if (!units.length) return "";
+    }
+    const body = units.length
+      ? units.map(u => `<div class="unit"><h3>${hl(u.title)}</h3><ul>${u.items.map(i => `<li>${hl(i)}</li>`).join("")}</ul></div>`).join("")
+      : `<div class="empty">아직 정리된 자료가 없어요.</div>`;
+    return `<details${q || filter !== "all" ? " open" : ""}><summary><div><div class="name">${esc(s.name)}</div><div class="book">${esc(s.book)}</div></div></summary><div class="body">${body}</div></details>`;
+  }).join("");
+  $("#list").innerHTML = html || `<div class="none">검색 결과가 없어요. 다른 키워드로 찾아보세요.</div>`;
+}
+
+$("#q").addEventListener("input", e => { query = e.target.value.trim(); render(); });
+$("#tabs").addEventListener("click", e => {
+  const b = e.target.closest(".tab");
+  if (!b) return;
+  filter = b.dataset.id; renderTabs(); render();
+});
+
+document.title = EXAM.name;
+$("#title").textContent = EXAM.name;
+renderDday(); renderTabs(); render();
+</script>
+</body>
+</html>
