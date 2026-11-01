@@ -1,6 +1,6 @@
 /* ===== 사이트 기본 설정 =====
    name : 사이트 제목
-   date : 시험 첫날 "2026-11-13" (비워두면 D-day가 "날짜 미정"으로 표시)
+   date : 시험 첫날 "yyyy-mm-dd" (비워두면 D-day가 "날짜 미정"으로 표시)
    SUBJECTS : 탭/카드에 나오는 과목 목록. id는 data/ 폴더의 파일 이름과 같아야 해 (id가 sci면 data/sci.js).
    과목을 추가하려면 아래에 한 줄 추가하고, data/새id.js 파일을 만들면 돼. */
 const EXAM = { name: "시험 자료 정리", date: "" };
