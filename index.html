@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>시험 자료 정리</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--bg:#f2f4f6;--card:#fff;--text:#191f28;--sub:#6b7684;--line:#e5e8eb;--blue:#3182f6;--blue-bg:#e8f3ff;--mark:#fff1a8}
+@media(prefers-color-scheme:dark){:root{--bg:#101215;--card:#1b1e23;--text:#f2f4f6;--sub:#9aa3af;--line:#2b2f36;--blue:#4593fc;--blue-bg:#16253a;--mark:#6b5b12}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.6}
+main{max-width:640px;margin:0 auto;padding:32px 16px 64px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:20px}
+h1{font-size:26px;margin:0;letter-spacing:-.02em}
+.dday{background:var(--blue);color:#fff;font-weight:700;border-radius:14px;padding:8px 14px;font-size:15px;white-space:nowrap}
+.search{width:100%;border:0;border-radius:14px;background:var(--card);color:var(--text);padding:14px 16px;font:inherit;font-size:16px;outline:2px solid transparent}
+.search:focus{outline-color:var(--blue)}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:14px 0 6px}
+.tab{flex:none;border:0;border-radius:999px;background:var(--card);color:var(--sub);padding:8px 14px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.tab[aria-pressed=true]{background:var(--blue);color:#fff}
+.tab:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+details{background:var(--card);border-radius:18px;margin-top:12px;overflow:hidden}
+summary{list-style:none;cursor:pointer;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--sub);border-bottom:2px solid var(--sub);transform:rotate(45deg);transition:transform .2s;flex:none;margin:-4px 4px 0 0}
+details[open] summary::after{transform:rotate(-135deg);margin-top:4px}
+.name{font-size:18px;font-weight:700}
+.book{font-size:13px;color:var(--sub);margin-top:2px}
+.body{padding:0 20px 20px}
+.unit{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+.unit h3{font-size:15px;margin:0 0 6px;color:var(--blue)}
+.unit ul{margin:0;padding-left:20px}
+.unit li{margin:4px 0;font-size:15px}
+.empty{color:var(--sub);font-size:14px;padding:4px 0}
+.unit li.ans{list-style:none;margin-left:-20px;background:var(--blue-bg);border-radius:10px;padding:8px 12px}
+.unit li.tip{list-style:none;margin-left:-20px;background:var(--mark);border-radius:10px;padding:8px 12px;white-space:pre-line}
+.unit li.lab{list-style:none;margin-left:-20px;margin-top:12px;font-weight:700;color:var(--blue)}
+mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 1px}
+.none{text-align:center;color:var(--sub);padding:48px 0}
+[hidden]{display:none!important}
+main{padding-bottom:96px}
+.ai-fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;border:0;border-radius:999px;background:var(--blue);color:#fff;font:inherit;font-weight:700;font-size:15px;padding:12px 18px;box-shadow:0 6px 20px rgba(0,0,0,.25);cursor:pointer}
+.ai-back{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:30}
+.ai-sheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:640px;height:min(86vh,720px);height:min(86dvh,720px);background:var(--bg);border-radius:20px 20px 0 0;z-index:31;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
+.ai-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 6px}
+.ai-head strong{font-size:17px}
+.ai-x{border:0;background:var(--card);color:var(--text);width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer}
+.ai-subj{display:flex;gap:8px;overflow-x:auto;padding:6px 16px 10px}
+.ai-chip{flex:none;border:0;border-radius:999px;background:var(--card);color:var(--sub);padding:7px 14px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.ai-chip[aria-pressed=true]{background:var(--blue);color:#fff}
+.ai-msgs{flex:1;overflow-y:auto;padding:4px 16px 12px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{max-width:88%;padding:10px 14px;border-radius:16px;font-size:15px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.ai-msg.user{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:4px}
+.ai-msg.model{align-self:flex-start;background:var(--card);border-bottom-left-radius:4px}
+.ai-msg.note{align-self:center;background:var(--mark);font-size:14px;text-align:center}
+.ai-msg.hint{align-self:center;background:transparent;color:var(--sub);font-size:14px;text-align:center}
+.ai-form{display:flex;gap:8px;padding:8px 16px 4px}
+.ai-form textarea{flex:1;resize:none;border:0;border-radius:14px;background:var(--card);color:var(--text);padding:11px 14px;font:inherit;font-size:16px;line-height:1.4;max-height:110px;outline:2px solid transparent}
+.ai-form textarea:focus{outline-color:var(--blue)}
+.ai-send{border:0;border-radius:14px;background:var(--blue);color:#fff;font:inherit;font-weight:700;padding:0 16px;cursor:pointer}
+.ai-send:disabled{opacity:.5;cursor:default}
+.ai-note{font-size:12px;color:var(--sub);padding:2px 18px 10px}
+.ai-x:focus-visible,.ai-chip:focus-visible,.ai-send:focus-visible,.ai-fab:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){summary::after{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1 id="title">시험 자료 정리</h1>
+    <div class="dday" id="dday"></div>
+  </header>
+  <input class="search" id="q" type="search" placeholder="키워드로 검색" aria-label="키워드로 검색">
+  <div class="tabs" id="tabs"></div>
+  <div id="list"></div>
+</main>
+
+<button class="ai-fab" id="aiOpen" type="button" aria-haspopup="dialog">✨ AI 질문</button>
+<div class="ai-back" id="aiBack" hidden></div>
+<section class="ai-sheet" id="aiSheet" role="dialog" aria-modal="true" aria-label="AI 질문" hidden>
+  <div class="ai-head"><strong>AI 질문</strong><button class="ai-x" id="aiClose" type="button" aria-label="닫기">✕</button></div>
+  <div class="ai-subj" id="aiSubj"></div>
+  <div class="ai-msgs" id="aiMsgs" aria-live="polite"></div>
+  <form class="ai-form" id="aiForm">
+    <textarea id="aiInput" rows="1" maxlength="300" placeholder="궁금한 내용을 물어보세요" aria-label="질문 입력"></textarea>
+    <button class="ai-send" id="aiSend" type="submit">보내기</button>
+  </form>
+  <div class="ai-note">이 사이트에 정리된 자료만 근거로 답해요. AI 답변은 틀릴 수 있으니 근거 카드를 꼭 확인하고, 이름·학교 같은 개인정보는 입력하지 마세요.</div>
+</section>
+
+<script>window.UNITS = {};</script>
+<script src="data/config.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const cls = i => i.startsWith("서술형 대비") ? " class=\"ans\"" : (i.startsWith("출제자 함정") || i.startsWith("🚨")) ? " class=\"tip\"" : /^\[[^\]]*\]$/.test(i) ? " class=\"lab\"" : "";
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+let filter = "all", query = "";
+
+function renderDday() {
+  const el = $("#dday");
+  if (!EXAM.date) { el.textContent = "날짜 미정"; return; }
+  const t = new Date(EXAM.date + "T00:00:00"), n = new Date();
+  n.setHours(0, 0, 0, 0);
+  const d = Math.round((t - n) / 864e5);
+  const e = EXAM.end ? Math.round((new Date(EXAM.end + "T00:00:00") - n) / 864e5) : 0;
+  el.textContent = d > 0 ? "D-" + d : d === 0 ? "D-Day" : e >= 0 ? "시험 중" : "시험 끝";
+}
+
+function renderTabs() {
+  const tabs = [{ id: "all", name: "전체" }, ...SUBJECTS];
+  $("#tabs").innerHTML = tabs.map(t =>
+    `<button class="tab" data-id="${t.id}" aria-pressed="${t.id === filter}">${esc(t.name)}</button>`).join("");
+}
+
+function hl(text) {
+  const safe = esc(text);
+  if (!query) return safe;
+  return safe.replace(new RegExp("(" + reEsc(esc(query)) + ")", "gi"), "<mark>$1</mark>");
+}
+
+function render() {
+  const q = query.toLowerCase();
+  const html = SUBJECTS.filter(s => filter === "all" || s.id === filter).map(s => {
+    let units = s.units;
+    if (q) {
+      units = units.map(u => ({
+        title: u.title,
+        items: (u.title.toLowerCase().includes(q) ? u.items : u.items.filter(i => i.toLowerCase().includes(q)))
+      })).filter(u => u.items.length || u.title.toLowerCase().includes(q));
+      if (!units.length) return "";
+    }
+    const body = units.length
+      ? units.map(u => `<div class="unit"><h3>${hl(u.title)}</h3><ul>${u.items.map(i => `<li${cls(i)}>${hl(i)}</li>`).join("")}</ul></div>`).join("")
+      : `<div class="empty">아직 정리된 자료가 없어요.</div>`;
+    return `<details${q || filter !== "all" ? " open" : ""}><summary><div><div class="name">${esc(s.name)}</div><div class="book">${esc(s.book)}</div></div></summary><div class="body">${body}</div></details>`;
+  }).join("");
+  $("#list").innerHTML = html || `<div class="none">검색 결과가 없어요. 다른 키워드로 찾아보세요.</div>`;
+}
+
+$("#q").addEventListener("input", e => { query = e.target.value.trim(); render(); });
+$("#tabs").addEventListener("click", e => {
+  const b = e.target.closest(".tab");
+  if (!b) return;
+  filter = b.dataset.id; renderTabs(); render();
+});
+
+document.title = EXAM.name;
+$("#title").textContent = EXAM.name;
+renderDday(); renderTabs();
+
+/* 과목별 데이터 파일(data/과목id.js)을 불러온 뒤 화면을 그린다. 파일이 없거나 오류가 나도 해당 과목만 "자료 없음"으로 표시. */
+$("#list").innerHTML = `<div class="none">불러오는 중…</div>`;
+Promise.all(SUBJECTS.map(s => new Promise(done => {
+  const el = document.createElement("script");
+  el.src = "data/" + s.id + ".js";
+  el.onload = el.onerror = done;
+  document.head.appendChild(el);
+}))).then(() => {
+  SUBJECTS.forEach(s => { s.units = UNITS[s.id] || []; });
+  render();
+});
+
+/* ===== AI 질문 (Google Gemini API) ===== */
+const aiReady = () => typeof AI !== "undefined" && !!AI.key && !!AI.model;
+const aiState = { subject: null, chats: {}, busy: false };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const norm = s => s.toLowerCase().replace(/[^0-9a-z가-힣]/g, "");
+const subjectsWithData = () => SUBJECTS.filter(s => s.units && s.units.length);
+
+/* 질문과 관련 있는 카드만 고르기 (AI.topCards > 0일 때만 사용): 두 글자 단위로 겹치는 정도를 점수로 계산 */
+function pickUnits(units, text, n) {
+  const bodies = units.map(u => norm(u.title + u.items.join("")));
+  const t = norm(text), qg = [];
+  for (let i = 0; i < t.length - 1; i++) { const g = t.slice(i, i + 2); if (!qg.includes(g)) qg.push(g); }
+  const df = qg.map(g => bodies.filter(b => b.includes(g)).length);
+  return units
+    .map((u, i) => ({ u, i, sc: qg.reduce((a, g, k) => a + (df[k] && bodies[i].includes(g) ? 1 / df[k] : 0), 0) }))
+    .sort((a, b) => b.sc - a.sc).slice(0, n)
+    .sort((a, b) => a.i - b.i).map(x => x.u);
+}
+
+function buildMaterial(s, chat) {
+  let units = s.units;
+  if (AI.topCards > 0 && units.length > AI.topCards) {
+    const recent = chat.filter(m => m.role === "user").slice(-2).map(m => m.text).join(" ");
+    units = pickUnits(units, recent, AI.topCards);
+  }
+  return units.map(u => "■ " + u.title + "\n" + u.items.join("\n")).join("\n\n");
+}
+
+function toContents(chat) {
+  let msgs = chat.filter(m => m.role === "user" || m.role === "model").slice(-6);
+  while (msgs.length && msgs[0].role !== "user") msgs.shift();
+  return msgs.map(m => ({ role: m.role, parts: [{ text: m.text }] }));
+}
+
+async function callGemini(s, chat) {
+  const body = JSON.stringify({
+    systemInstruction: { parts: [{ text: AI.rules + "\n\n<자료>\n" + buildMaterial(s, chat) + "\n</자료>" }] },
+    contents: toContents(chat),
+    generationConfig: { temperature: 0.2, maxOutputTokens: 2048 }
+  });
+  const url = "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(AI.model) + ":generateContent";
+  for (let attempt = 0; attempt < 2; attempt++) {
+    let res;
+    try {
+      res = await fetch(url, { method: "POST", headers: { "content-type": "application/json", "x-goog-api-key": AI.key }, body });
+    } catch (e) { return { error: "인터넷 연결을 확인하고 다시 시도해 주세요." }; }
+    if ((res.status === 429 || res.status === 503) && attempt === 0) { await sleep(3000); continue; }
+    if (res.status === 429 || res.status === 503) return { error: "지금 질문이 몰렸어요. 잠시 후 다시 물어봐 주세요." };
+    if (!res.ok) return { error: "AI 설정에 문제가 있어요. 선생님께 알려주세요. (오류 코드 " + res.status + ")" };
+    const j = await res.json().catch(() => ({}));
+    const text = ((j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || [])
+      .map(p => p.text || "").join("").trim();
+    return text ? { text } : { error: "이 질문에는 답을 만들지 못했어요. 표현을 바꿔서 다시 물어봐 주세요." };
+  }
+}
+
+const fmt = t => esc(t).replace(/^\s*[*\-]\s+/gm, "• ").replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+function renderAiSubjects() {
+  const list = subjectsWithData();
+  $("#aiSubj").innerHTML = list.map(s =>
+    `<button class="ai-chip" type="button" data-id="${s.id}" aria-pressed="${s.id === aiState.subject}">${esc(s.name)}</button>`).join("");
+}
+
+function renderChat() {
+  const box = $("#aiMsgs");
+  if (!subjectsWithData().length) { box.innerHTML = `<div class="ai-msg hint">아직 정리된 자료가 없어서 질문할 수 없어요.</div>`; return; }
+  const chat = aiState.chats[aiState.subject] || [];
+  let html = chat.length ? "" : `<div class="ai-msg hint">선택한 과목의 정리 자료 안에서 궁금한 걸 물어보세요.<br>예) "쓸개즙에 소화 효소가 있어요?"</div>`;
+  html += chat.map(m => m.role === "model" ? `<div class="ai-msg model">${fmt(m.text)}</div>`
+    : `<div class="ai-msg ${m.role}">${esc(m.text)}</div>`).join("");
+  if (aiState.busy) html += `<div class="ai-msg model">자료에서 찾는 중…</div>`;
+  box.innerHTML = html;
+  box.scrollTop = box.scrollHeight;
+}
+
+function openAi() {
+  const list = subjectsWithData();
+  if (!aiState.subject || !list.some(s => s.id === aiState.subject))
+    aiState.subject = (list.find(s => s.id === filter) || list[0] || {}).id || null;
+  $("#aiBack").hidden = false; $("#aiSheet").hidden = false;
+  renderAiSubjects(); renderChat();
+  $("#aiInput").focus();
+}
+function closeAi() { $("#aiBack").hidden = true; $("#aiSheet").hidden = true; $("#aiOpen").focus(); }
+
+async function sendAi() {
+  const ta = $("#aiInput"), text = ta.value.trim();
+  if (!text || aiState.busy || !aiState.subject) return;
+  const chat = aiState.chats[aiState.subject] = aiState.chats[aiState.subject] || [];
+  chat.splice(0, chat.length, ...chat.filter(m => m.role !== "note"));
+  if (!aiReady()) {
+    chat.push({ role: "note", text: "AI 기능은 아직 준비 중이에요. 선생님이 설정을 마치면 사용할 수 있어요." });
+    renderChat(); return;
+  }
+  const s = SUBJECTS.find(x => x.id === aiState.subject);
+  chat.push({ role: "user", text });
+  ta.value = ""; ta.style.height = "auto";
+  aiState.busy = true; $("#aiSend").disabled = true; renderChat();
+  const r = await callGemini(s, chat);
+  aiState.busy = false; $("#aiSend").disabled = false;
+  if (r.text) chat.push({ role: "model", text: r.text });
+  else { chat.pop(); chat.push({ role: "note", text: r.error }); ta.value = text; }
+  renderChat();
+}
+
+$("#aiOpen").addEventListener("click", openAi);
+$("#aiClose").addEventListener("click", closeAi);
+$("#aiBack").addEventListener("click", closeAi);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#aiSheet").hidden) closeAi(); });
+$("#aiSubj").addEventListener("click", e => {
+  const b = e.target.closest(".ai-chip");
+  if (!b) return;
+  aiState.subject = b.dataset.id; renderAiSubjects(); renderChat();
+});
+$("#aiForm").addEventListener("submit", e => { e.preventDefault(); sendAi(); });
+$("#aiInput").addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); sendAi(); }
+});
+$("#aiInput").addEventListener("input", e => { e.target.style.height = "auto"; e.target.style.height = Math.min(e.target.scrollHeight, 110) + "px"; });
+</script>
+</body>
+</html>
+
