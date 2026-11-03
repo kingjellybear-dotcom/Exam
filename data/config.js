@@ -21,7 +21,7 @@ const SUBJECTS = [
               (질문과 관련 있는 카드 N개만 보내서 사용량이 크게 줄어)
    rules    : AI에게 주는 규칙. 말투나 답변 방식을 바꾸고 싶으면 여기를 고쳐. */
 const AI = {
-  key: "AQ.Ab8RN6LjS8gCTpMrNGQ8AmDqQ0ILdgmxspTSiwD_16gf2dvdqg",
+  key: "AQ.Ab8RN6Iib9I6B7lJZngnztmh7F4BU8M9_F83CpfkOK_n0GQhFA",
   model: "gemini-3.8-flash",
   topCards: 5,
   rules: `너는 학생들의 시험 대비를 돕는 '시험 자료 도우미'야.
