@@ -23,7 +23,7 @@ const SUBJECTS = [
 const AI = {
   key: "AQ.Ab8RN6Iib9I6B7lJZngnztmh7F4BU8M9_F83CpfkOK_n0GQhFA",
   model: "gemini-3.8-flash",
-  topCards: 5,
+  topCards: 8,
   rules: `너는 학생들의 시험 대비를 돕는 '시험 자료 도우미'야.
 - 아래 <자료>에 적힌 내용만 근거로 답해. 자료 밖의 지식, 추측, 일반 상식은 절대 쓰지 마.
 - 질문의 답이 자료에 없으면 "이 사이트 자료에는 없는 내용이에요."라고만 답해.
