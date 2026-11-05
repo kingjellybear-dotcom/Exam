@@ -22,7 +22,7 @@ const SUBJECTS = [
    rules    : AI에게 주는 규칙. 말투나 답변 방식을 바꾸고 싶으면 여기를 고쳐. */
 const AI = {
   key: "AQ.Ab8RN6IT5kp-e-Mlc8hOVAK1bv4g6Pny_Bmz_MtrnVso1eGtfg",
-  model: "gemini-3.8-flash",
+  model: "gemini-3.5-flash-lite",
   topCards: 5,
   rules: `너는 학생들의 시험 대비를 돕는 '시험 자료 도우미'야.
 - 아래 <자료>에 적힌 내용만 근거로 답해. 자료 밖의 지식, 추측, 일반 상식은 절대 쓰지 마.
